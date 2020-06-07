@@ -1,22 +1,22 @@
-const { spawn, kill } = require("../");
+const ChildService = require("../");
+const got = require("got");
 
+const childService = new ChildService({
+	command: process.argv0,
+	args: ["service.js"],
+	readyRegex: /Listening on port 3000/,
+	spawnOptions: {
+		cwd: __dirname,
+	},
+});
 
 (async function () {
-	process.env.DEBUG = "child-service:*";
+	await childService.start();
+	console.log("Started!")
 
-	const child = await spawn(process.argv0, "service.js", {
-		readyRegex: /Ready/,
-    spawnOptions: {
-		  cwd: __dirname
-    }
-	});
+	const response = await got("http://127.0.0.1:3000")
+	console.log(response.body)
 
-	child.stdout.pipe(process.stdout)
-  await delay(1000);
-	await kill(child);
-
+	await childService.stop();
+	console.log("Stopped!");
 })();
-
-async function delay(milliSeconds) {
-  await new Promise(resolve => setTimeout(resolve, milliSeconds))
-}

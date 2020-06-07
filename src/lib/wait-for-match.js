@@ -1,4 +1,4 @@
-const debug = require("debug")("child-service:find-pattern");
+const debug = require("debug")("child-service:wait-for-match");
 
 module.exports = {
 	waitForMatch,
@@ -19,26 +19,29 @@ async function waitForMatch({readable, limit, regex }) {
 		const outputBuffer = Buffer.alloc(limit);
 		let writeIndex = 0;
 
-		readable.on("data", (buffer) => {
+		let onData = (buffer) => {
 			buffer.copy(outputBuffer, writeIndex);
 			writeIndex += buffer.length;
 
 			const contents = outputBuffer.toString("utf8", 0, writeIndex);
 			let patternFound = Boolean(contents.match(regex));
 			debug(
-				`Checking for ${regex} (found: ${patternFound}) on output: ${contents}`
+					`Checking for ${regex} (found: ${patternFound}) on output: ${contents}`
 			);
 			if (patternFound) {
+				readable.off('data', onData)
 				return resolve();
 			}
 			if (writeIndex > limit) {
+				readable.off('data', onData)
 				return reject(
-					new Error(
-						`Pattern not found within the first ${limit} bytes of the stream`
-					)
+						new Error(
+								`Pattern not found within the first ${limit} bytes of the stream`
+						)
 				);
 			}
 			debug("Continue waiting for data");
-		});
+		};
+		readable.on("data", onData);
 	});
 }

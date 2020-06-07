@@ -1,10 +1,10 @@
-setTimeout(() => {
-  console.log('Ready')
-}, 500)
+const http = require("http");
 
-let counter = 0;
-setInterval(() => {
-  counter++;
-  console.log(`Running: ${counter}`)
-}, 200)
-
+http
+	.createServer((req, res) => {
+	  console.log("Incoming request");
+		res.end("hello\n");
+	})
+	.listen(3000, () => {
+	  console.log("Listening on port 3000");
+  });
