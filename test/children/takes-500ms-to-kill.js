@@ -1,4 +1,4 @@
-const { run, delay } = require("./helpers");
+const { run, delay } = require("../helpers");
 
 process.on("SIGTERM", async function () {
 	console.log("SIGTERM received");

@@ -10,7 +10,7 @@
 	},
 	"overrides": [
 		{
-			"files": ["**/test/*.test.js"],
+			"files": ["src/**/*.test.js"],
 			"env": {
 				"jest": true
 			}

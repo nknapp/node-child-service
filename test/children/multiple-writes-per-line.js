@@ -1,12 +1,12 @@
 const { run, delay } = require("../helpers");
 
 run(async function () {
-	console.log("Not ready");
+	process.stdout.write("Now");
 	await delay(100);
-	console.log("Not ready");
+	process.stdout.write(" I");
 	await delay(100);
-	console.log("Not ready");
+	process.stdout.write(" am");
 	await delay(100);
-	console.log("Now I am ready");
+	process.stdout.write(" ready\n");
 	await delay(1000);
 });

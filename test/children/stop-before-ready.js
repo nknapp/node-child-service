@@ -1,4 +1,4 @@
-const { run, delay } = require("./helpers");
+const { run, delay } = require("../helpers");
 
 run(async function () {
 	console.log("Not ready");
