@@ -1,8 +1,10 @@
 const ChildService = require("../");
 const got = require("got");
 
+// We call nodejs in this example, but in reality, it
+// is probably some binary executable.
 const childService = new ChildService({
-	command: process.argv0,
+	command: process.execPath,
 	args: ["service.js"],
 	readyRegex: /Listening on port 3000/,
 	spawnOptions: {
