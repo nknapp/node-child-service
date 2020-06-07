@@ -1,0 +1,19 @@
+{
+	"extends": ["eslint:recommended", "prettier"],
+	"env": {
+		"commonjs": true,
+		"es6": true,
+		"node": true
+	},
+	"parserOptions": {
+		"ecmaVersion": 2018
+	},
+	"overrides": [
+		{
+			"files": ["**/test/*.test.js"],
+			"env": {
+				"jest": true
+			}
+		}
+	]
+}

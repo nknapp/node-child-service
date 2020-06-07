@@ -1,8 +1,27 @@
 {
-  "name": "childcare",
+  "name": "child-service",
   "version": "1.0.0",
   "description": "Run and monitor child-processes",
   "main": "src/index.js",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "scripts": {
+    "test:jest": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "pretest": "npm run lint",
+    "test": "npm run test:jest --",
+    "posttest": "npm run format",
+    "format": "prettier --loglevel warn --write \"**/*.{js,css,md}\"",
+    "lint": "eslint . --cache --fix"
+  },
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-prettier": "^6.7.0",
+    "jest": "^26.0.1",
+    "prettier": "^2.0.5"
+  },
+  "dependencies": {
+    "debug": "^4.1.1"
+  }
 }
