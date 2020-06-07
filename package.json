@@ -16,7 +16,9 @@
     "test": "npm run test:jest --",
     "posttest": "npm run format",
     "format": "prettier --loglevel warn --write \"**/*.{js,css,md}\"",
-    "lint": "eslint . --cache --fix"
+    "lint": "eslint . --cache --fix",
+    "thought": "thought run -a",
+    "version": "npm run thought"
   },
   "devDependencies": {
     "eslint": "^7.2.0",
