@@ -1,7 +1,7 @@
 {
   "name": "child-service",
   "version": "1.0.0",
-  "description": "Run and monitor child-processes",
+  "description": "Start services as child-process, wait until they are ready and stop them.",
   "main": "src/index.js",
   "license": "MIT",
   "private": false,
