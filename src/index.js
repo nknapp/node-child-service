@@ -25,11 +25,11 @@ class ChildService {
 
 	/**
 	 * Starts the service.
-   *
+	 *
 	 * @returns {Promise<void>} resolves when the "readyRegex" has been found.
 	 */
 	async start() {
-		if (this.childProcess != null && !this.childProcess.killed) {
+		if (this.childProcess != null && this.childProcess.exitCode == null) {
 			throw new Error("Child process is already running. Please stop first!");
 		}
 		const options = {
@@ -65,11 +65,10 @@ class ChildService {
 	 * @returns {Promise<void>} resolves, when the executable has exited.
 	 */
 	async stop() {
-		const terminationPromise = awaitTermination(this.childProcess);
-		if (this.childProcess.killed) {
-			this.childProcess = null;
+		if (this.childProcess.exitCode != null) {
 			return;
 		}
+		const terminationPromise = waitForExit(this.childProcess);
 		this.childProcess.kill();
 		await terminationPromise;
 		this.childProcess = null;
@@ -77,16 +76,10 @@ class ChildService {
 }
 
 /**
- * Kills a child-process and waits untils it exits
- * @param childProcess the child-process
- * @returns {Promise<void>} promise resolves when the child-process has exited
- */
-
-/**
  * @private
  */
 async function shouldNotTerminate(childProcess) {
-	const exitCode = await awaitTermination(childProcess);
+	const exitCode = await waitForExit(childProcess);
 	throw new Error(`Process terminated with exit-code ${exitCode}`);
 }
 
@@ -96,7 +89,7 @@ async function shouldNotTerminate(childProcess) {
 /**
  * @private
  */
-async function awaitTermination(childProcess) {
+async function waitForExit(childProcess) {
 	return new Promise((resolve) => {
 		childProcess.on("exit", (code) => {
 			resolve(code);
