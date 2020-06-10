@@ -2,7 +2,7 @@
 
 [![NPM version](https://img.shields.io/npm/v/child-service.svg)](https://npmjs.com/package/child-service)
 
-> Run and monitor child-processes
+> Start services as child-process, wait until they are ready and stop them.
 
 # Installation
 
@@ -12,7 +12,9 @@ npm install child-service
 
 # Usage
 
-Let's assume, we have a service that we we
+Let's assume, we have a service that does not detach, but it is not ready immediately after start. We want to start this service call some endpoints and stop it again (for example in tests). Assume that our service is implemented in `service.js` (for portability, we use a Node.js program in this example, but I actually wrote this tool for use with [chisel](https://github.com/jpillora/chisel).
+
+We can now do the following.
 
 ```js
 const ChildService = require("../");
@@ -41,7 +43,7 @@ const childService = new ChildService({
 })();
 ```
 
-This will generate the following output
+This will start the service, wait until the stdout matches pattern, then call an endpoint and stop it again. The output of this program is:
 
 ```
 Started!
@@ -103,6 +105,10 @@ Stop the service.
 `child-service` is published under the MIT-license.
 
 See [LICENSE.md](LICENSE.md) for details.
+
+# Release-Notes
+
+For release notes, see [CHANGELOG.md](CHANGELOG.md)
 
 # Contributing guidelines
 
