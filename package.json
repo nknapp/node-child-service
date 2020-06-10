@@ -18,7 +18,8 @@
     "format": "prettier --loglevel warn --write \"**/*.{js,css,md}\"",
     "lint": "eslint . --cache --fix",
     "thought": "thought run -a",
-    "version": "npm run thought"
+    "changelog": "standard-changelog && git add CHANGELOG.md",
+    "version": "npm run changelog && npm run thought"
   },
   "devDependencies": {
     "eslint": "^7.2.0",
