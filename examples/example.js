@@ -14,10 +14,10 @@ const childService = new ChildService({
 
 (async function () {
 	await childService.start();
-	console.log("Started!")
+	console.log("Started!");
 
-	const response = await got("http://127.0.0.1:3000")
-	console.log(response.body)
+	const response = await got("http://127.0.0.1:3000");
+	console.log(response.body);
 
 	await childService.stop();
 	console.log("Stopped!");

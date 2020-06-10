@@ -1,17 +1,17 @@
 const ChildService = require("./index");
-const {ChildProcess} = require('child_process')
+const { ChildProcess } = require("child_process");
 
 describe("The child-service package", () => {
 	it("should wait until the child-process is ready", async () => {
 		const service = new ChildService({
 			command: process.argv0,
-			args: [ "test/children/ready-after-500ms.js"],
+			args: ["test/children/ready-after-500ms.js"],
 			readyRegex: /Now I am ready/,
 		});
 
-		const {duration, result } = await measureMillis(() => service.start());
+		const { duration, result } = await measureMillis(() => service.start());
 
-		expect(result).toBeInstanceOf(ChildProcess)
+		expect(result).toBeInstanceOf(ChildProcess);
 		expect(duration).toBeGreaterThan(200);
 		expect(duration).toBeLessThan(1000);
 	});
@@ -23,9 +23,9 @@ describe("The child-service package", () => {
 			readyRegex: /Now I am ready/,
 		});
 
-		const {duration, result} = await measureMillis(() => service.start());
+		const { duration, result } = await measureMillis(() => service.start());
 
-		expect(result).toBeInstanceOf(ChildProcess)
+		expect(result).toBeInstanceOf(ChildProcess);
 		expect(result.exitCode).toBeNull();
 		expect(duration).toBeGreaterThan(200);
 		expect(duration).toBeLessThan(1000);
@@ -50,7 +50,7 @@ describe("The child-service package", () => {
 			readyRegex: /Now I am ready/,
 		});
 
-		const child = await service.start()
+		const child = await service.start();
 		await service.stop();
 		expect(child.killed).toBeTruthy();
 		expect(child.exitCode).not.toBeNull();
@@ -63,25 +63,19 @@ describe("The child-service package", () => {
 			readyRegex: /Now I am ready/,
 		});
 
-		const child = await service.start()
+		const child = await service.start();
 		await service.stop();
 		expect(child.killed).toBeTruthy();
 	});
 
-	xit('should pass spawnOptions to "spawn"', () => {
-
-
-	})
+	xit('should pass spawnOptions to "spawn"', () => {});
 });
 
-
 async function measureMillis(fn) {
-	const start = Date.now()
-	const result = await fn()
+	const start = Date.now();
+	const result = await fn();
 	return {
 		result,
-		duration: Date.now() - start
-	}
+		duration: Date.now() - start,
+	};
 }
-
-

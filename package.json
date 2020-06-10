@@ -26,6 +26,7 @@
     "got": "^11.3.0",
     "jest": "^26.0.1",
     "prettier": "^2.0.5",
+    "standard-changelog": "^2.0.24",
     "thought": "^3.0.0",
     "thought-plugin-jsdoc": "^2.0.0"
   },
