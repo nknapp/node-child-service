@@ -53,8 +53,8 @@ class ChildService {
 				regex: options.readyRegex,
 				limit: options.outputLimit,
 			}),
-			shouldNotError(this.childProcess),
-			shouldNotTerminate(this.childProcess),
+			this._shouldNotError(),
+			this._shouldNotTerminate(),
 		]);
 		return this.childProcess;
 	}
@@ -68,44 +68,41 @@ class ChildService {
 		if (this.childProcess.exitCode != null) {
 			return;
 		}
-		const terminationPromise = waitForExit(this.childProcess);
+		const terminationPromise = this._waitForExit();
 		this.childProcess.kill();
 		await terminationPromise;
 		this.childProcess = null;
 	}
-}
 
-/**
- * @private
- */
-async function shouldNotTerminate(childProcess) {
-	const exitCode = await waitForExit(childProcess);
-	throw new Error(`Process terminated with exit-code ${exitCode}`);
-}
+	/**
+	 * @private
+	 */
+	async _shouldNotTerminate() {
+		const exitCode = await this._waitForExit();
+		throw new Error(`Process terminated with exit-code ${exitCode}`);
+	}
 
-/**
- * @private
- */
-/**
- * @private
- */
-async function waitForExit(childProcess) {
-	return new Promise((resolve) => {
-		childProcess.on("exit", (code) => {
-			resolve(code);
+	/**
+	 * @private
+	 */
+	async _waitForExit() {
+		return new Promise((resolve) => {
+			this.childProcess.on("exit", (code) => {
+				resolve(code);
+			});
 		});
-	});
-}
+	}
 
-/**
- * @private
- */
-async function shouldNotError(childProcess) {
-	return new Promise((resolve, reject) => {
-		childProcess.on("error", (error) => {
-			reject(error);
+	/**
+	 * @private
+	 */
+	async _shouldNotError() {
+		return new Promise((resolve, reject) => {
+			this.childProcess.on("error", (error) => {
+				reject(error);
+			});
 		});
-	});
+	}
 }
 
 module.exports = ChildService;

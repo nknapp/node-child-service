@@ -3,6 +3,8 @@ module.exports = {
 		return new Promise((resolve) => setTimeout(resolve, milliSeconds));
 	},
 	run(fn) {
-		fn();
+		fn().catch((error) => {
+			console.error(error.message + "\n" + error.stack);
+		});
 	},
 };
