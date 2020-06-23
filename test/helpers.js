@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 module.exports = {
 	async delay(milliSeconds) {
 		return new Promise((resolve) => setTimeout(resolve, milliSeconds));

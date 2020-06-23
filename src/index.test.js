@@ -84,14 +84,25 @@ describe("The child-service package", () => {
 			);
 		});
 
-		it("stopping the service returns immediately without error", () => {
+		it("errors while starting the service throw an exception", async () => {
+			service = new ChildService({
+				command: "non-existing-command",
+				args: [],
+				readyRegex: /Now I am ready/,
+			});
+
+			const promise = service.start();
+			await expect(promise).rejects.toThrow(/ENOENT/);
+		});
+
+		it("stopping the service returns immediately without error", async () => {
 			service = new ChildService({
 				command: process.argv0,
 				args: ["test/children/takes-500ms-to-kill.js"],
 				readyRegex: /Now I am ready/,
 			});
 
-			expect(service.stop()).resolves.not.toBeNull();
+			await expect(service.stop()).resolves.not.toBeNull();
 		});
 	});
 
@@ -117,7 +128,7 @@ describe("The child-service package", () => {
 				readyRegex: /Now I am ready/,
 			});
 			await service.start();
-			expect(service.start()).rejects.toThrowError(
+			await expect(service.start()).rejects.toThrowError(
 				/Child process is already running. Please stop first!/
 			);
 		});

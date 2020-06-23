@@ -58,4 +58,22 @@ describe("wait-for-match", () => {
 			/Pattern not found within the first 11 bytes of the stream/
 		);
 	});
+
+	it('requires a "readable"', () => {
+		expect(
+			waitForMatch({ readable: null, limit: 10, regex: /abc/ })
+		).rejects.toThrowError();
+	});
+
+	it('requires a "limit"', () => {
+		expect(
+			waitForMatch({ readable: new PassThrough(), regex: /abc/ })
+		).rejects.toThrowError();
+	});
+
+	it('requires a "regex"', () => {
+		expect(
+			waitForMatch({ readable: new PassThrough(), limit: 10 })
+		).rejects.toThrowError();
+	});
 });
