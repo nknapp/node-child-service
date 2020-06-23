@@ -1,74 +1,140 @@
 const ChildService = require("./index");
-const { ChildProcess } = require("child_process");
+const cp = require("child_process");
+const { ChildProcess } = cp;
 
 describe("The child-service package", () => {
-	it("should wait until the child-process is ready", async () => {
-		const service = new ChildService({
-			command: process.argv0,
-			args: ["test/children/ready-after-500ms.js"],
-			readyRegex: /Now I am ready/,
-		});
+	let service = null;
 
-		const { duration, result } = await measureMillis(() => service.start());
-
-		expect(result).toBeInstanceOf(ChildProcess);
-		expect(duration).toBeGreaterThan(200);
-		expect(duration).toBeLessThan(1000);
+	afterEach(async () => {
+		if (service != null) {
+			await service.stop();
+		}
 	});
 
-	it("should work with processes that write multiple times per line", async () => {
-		const service = new ChildService({
-			command: process.argv0,
-			args: ["test/children/multiple-writes-per-line.js"],
-			readyRegex: /Now I am ready/,
+	describe("given the service is not running yet", () => {
+		describe("starting the service waits until the output matches the ready-regex", () => {
+			it("if the whole matching line is written in one go", async () => {
+				service = new ChildService({
+					command: process.argv0,
+					args: ["test/children/ready-after-500ms.js"],
+					readyRegex: /Now I am ready/,
+				});
+
+				const { duration, result } = await measureMillis(() => service.start());
+
+				expect(result).toBeInstanceOf(ChildProcess);
+				expect(duration).toBeGreaterThan(200);
+				expect(duration).toBeLessThan(1000);
+			});
+
+			it("if the matching line is written with multiple flushes", async () => {
+				service = new ChildService({
+					command: process.argv0,
+					args: ["test/children/multiple-writes-per-line.js"],
+					readyRegex: /Now I am ready/,
+				});
+
+				const { duration, result } = await measureMillis(() => service.start());
+
+				expect(result).toBeInstanceOf(ChildProcess);
+				expect(result.exitCode).toBeNull();
+				expect(duration).toBeGreaterThan(200);
+				expect(duration).toBeLessThan(1000);
+			});
 		});
 
-		const { duration, result } = await measureMillis(() => service.start());
+		it('should pass spawnOptions to "child_process.spawn"', async () => {
+			const spyOnSpawn = jest.spyOn(cp, "spawn");
+			service = new ChildService({
+				command: process.argv0,
+				args: ["children/ready-at-once.js"],
+				readyRegex: /Now I am ready/,
+				spawnOptions: {
+					env: {
+						ENV_VARIABLE: "value",
+					},
+					cwd: "test",
+				},
+			});
 
-		expect(result).toBeInstanceOf(ChildProcess);
-		expect(result.exitCode).toBeNull();
-		expect(duration).toBeGreaterThan(200);
-		expect(duration).toBeLessThan(1000);
-	});
+			await service.start();
 
-	it("should throw if the child process exits before the readyRegex is found", async () => {
-		const service = new ChildService({
-			command: process.argv0,
-			args: ["test/children/stop-before-ready.js"],
-			readyRegex: /Now I am ready/,
-		});
-		const promise = service.start();
-		await expect(promise).rejects.toThrow(
-			/Process terminated with exit-code 0/
-		);
-	});
-
-	it("awaits termination", async () => {
-		const service = new ChildService({
-			command: process.argv0,
-			args: ["test/children/takes-500ms-to-kill.js"],
-			readyRegex: /Now I am ready/,
-		});
-
-		const child = await service.start();
-		await service.stop();
-		expect(child.killed).toBeTruthy();
-		expect(child.exitCode).not.toBeNull();
-	});
-
-	it("returns if process is already killd", async () => {
-		const service = new ChildService({
-			command: process.argv0,
-			args: ["test/children/takes-500ms-to-kill.js"],
-			readyRegex: /Now I am ready/,
+			expect(spyOnSpawn).toHaveBeenCalledTimes(1);
+			expect(spyOnSpawn).toHaveBeenCalledWith(
+				process.argv0,
+				["children/ready-at-once.js"],
+				{
+					env: {
+						ENV_VARIABLE: "value",
+					},
+					cwd: "test",
+				}
+			);
 		});
 
-		const child = await service.start();
-		await service.stop();
-		expect(child.killed).toBeTruthy();
+		it("starting the service throws an exception if the child process exits prematurely", async () => {
+			service = new ChildService({
+				command: process.argv0,
+				args: ["test/children/stop-before-ready.js"],
+				readyRegex: /Now I am ready/,
+			});
+			const promise = service.start();
+			await expect(promise).rejects.toThrowError(
+				/Process terminated with exit-code 0/
+			);
+		});
+
+		it("stopping the service returns immediately without error", () => {
+			service = new ChildService({
+				command: process.argv0,
+				args: ["test/children/takes-500ms-to-kill.js"],
+				readyRegex: /Now I am ready/,
+			});
+
+			expect(service.stop()).resolves.not.toBeNull();
+		});
 	});
 
-	xit('should pass spawnOptions to "spawn"', () => {});
+	describe("given the service has been stopped", () => {
+		it("stopping the service returns immediately without error", async () => {
+			service = new ChildService({
+				command: process.argv0,
+				args: ["test/children/takes-500ms-to-kill.js"],
+				readyRegex: /Now I am ready/,
+			});
+
+			const child = await service.start();
+			await service.stop();
+			expect(child.killed).toBeTruthy();
+		});
+	});
+
+	describe("given the service is running", () => {
+		it("starting the service again throws an exception", async () => {
+			service = new ChildService({
+				command: process.argv0,
+				args: ["test/children/ready-after-500ms.js"],
+				readyRegex: /Now I am ready/,
+			});
+			await service.start();
+			expect(service.start()).rejects.toThrowError(
+				/Child process is already running. Please stop first!/
+			);
+		});
+
+		it("stopping the service awaits termination", async () => {
+			service = new ChildService({
+				command: process.argv0,
+				args: ["test/children/takes-500ms-to-kill.js"],
+				readyRegex: /Now I am ready/,
+			});
+
+			const child = await service.start();
+			await service.stop();
+			expect(child.killed).toBeTruthy();
+			expect(child.exitCode).not.toBeNull();
+		});
+	});
 });
 
 async function measureMillis(fn) {

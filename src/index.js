@@ -65,7 +65,7 @@ class ChildService {
 	 * @returns {Promise<void>} resolves, when the executable has exited.
 	 */
 	async stop() {
-		if (this.childProcess.exitCode != null) {
+		if (this.childProcess == null || this.childProcess.exitCode != null) {
 			return;
 		}
 		const terminationPromise = this._waitForExit();
