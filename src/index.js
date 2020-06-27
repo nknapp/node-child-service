@@ -1,6 +1,5 @@
-const cp = require("child_process");
-const debug = require("debug")("child-service:index");
 const { waitForMatch } = require("./lib/wait-for-match");
+const { WatchedChildProcess } = require("./lib/watched-child-process.js");
 
 /**
  * The class for starting and stopping services.
@@ -21,6 +20,7 @@ class ChildService {
 	 */
 	constructor(userOptions) {
 		this.userOptions = userOptions;
+		this.watchedChildProcess = null;
 	}
 
 	/**
@@ -29,7 +29,7 @@ class ChildService {
 	 * @returns {Promise<void>} resolves when the "readyRegex" has been found.
 	 */
 	async start() {
-		if (this.childProcess != null && this.childProcess.exitCode == null) {
+		if (this.watchedChildProcess != null && !this.watchedChildProcess.exited) {
 			throw new Error("Child process is already running. Please stop first!");
 		}
 		const options = {
@@ -37,26 +37,29 @@ class ChildService {
 			readyRegex: null,
 			...this.userOptions,
 		};
-		debug(`spawning`, {
-			command: options.command,
-			args: options.args,
-			options: options.spawnOptions,
-		});
-		this.childProcess = cp.spawn(
+
+		this.watchedChildProcess = new WatchedChildProcess(
 			options.command,
 			options.args,
 			options.spawnOptions
 		);
 		await Promise.race([
 			waitForMatch({
-				readable: this.childProcess.stdout,
+				readable: this.watchedChildProcess.childProcess.stdout,
 				regex: options.readyRegex,
 				limit: options.outputLimit,
 			}),
-			this._shouldNotError(),
-			this._shouldNotTerminate(),
+			this._waitForExit(),
 		]);
-		return this.childProcess;
+		if (this.watchedChildProcess.error != null) {
+			throw new Error(this.watchedChildProcess.error);
+		}
+		if (this.watchedChildProcess.exited) {
+			throw new Error(
+				`Process terminated with exit-code ${this.watchedChildProcess.childProcess.exitCode}`
+			);
+		}
+		return this.watchedChildProcess.childProcess;
 	}
 
 	/**
@@ -65,43 +68,18 @@ class ChildService {
 	 * @returns {Promise<void>} resolves, when the executable has exited.
 	 */
 	async stop() {
-		if (this.childProcess == null || this.childProcess.exitCode != null) {
+		if (this.watchedChildProcess == null) {
 			return;
 		}
-		const terminationPromise = this._waitForExit();
-		this.childProcess.kill();
-		await terminationPromise;
-		this.childProcess = null;
-	}
-
-	/**
-	 * @private
-	 */
-	async _shouldNotTerminate() {
-		const exitCode = await this._waitForExit();
-		throw new Error(`Process terminated with exit-code ${exitCode}`);
+		await this.watchedChildProcess.stop(1000);
+		this.watchedChildProcess = null;
 	}
 
 	/**
 	 * @private
 	 */
 	async _waitForExit() {
-		return new Promise((resolve) => {
-			this.childProcess.on("exit", (code) => {
-				resolve(code);
-			});
-		});
-	}
-
-	/**
-	 * @private
-	 */
-	async _shouldNotError() {
-		return new Promise((resolve, reject) => {
-			this.childProcess.on("error", (error) => {
-				reject(error);
-			});
-		});
+		return this.watchedChildProcess.exitPromise;
 	}
 }
 

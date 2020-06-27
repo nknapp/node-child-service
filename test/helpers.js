@@ -8,4 +8,12 @@ module.exports = {
 			console.error(error.message + "\n" + error.stack);
 		});
 	},
+	async measureMillis(fn) {
+		const start = Date.now();
+		const result = await fn();
+		return {
+			result,
+			duration: Date.now() - start,
+		};
+	},
 };

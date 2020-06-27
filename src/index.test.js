@@ -1,6 +1,7 @@
 const ChildService = require("./index");
 const cp = require("child_process");
 const { ChildProcess } = cp;
+const { measureMillis } = require("../test/helpers");
 
 describe("The child-service package", () => {
 	let service = null;
@@ -146,13 +147,6 @@ describe("The child-service package", () => {
 			expect(child.exitCode).not.toBeNull();
 		});
 	});
-});
 
-async function measureMillis(fn) {
-	const start = Date.now();
-	const result = await fn();
-	return {
-		result,
-		duration: Date.now() - start,
-	};
-}
+	xit("if the parent dies, the child-process should be stopped", async () => {});
+});
