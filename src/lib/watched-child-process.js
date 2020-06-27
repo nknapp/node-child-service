@@ -3,11 +3,7 @@ const cp = require("child_process");
 
 class WatchedChildProcess {
 	constructor(command, args, options) {
-		debug(`spawning`, {
-			command,
-			args,
-			options,
-		});
+		debug(`spawning`, { command, args, options });
 		this.childProcess = cp.spawn(command, args, options);
 
 		const exitEvent = new Promise((resolve) =>
@@ -15,6 +11,7 @@ class WatchedChildProcess {
 		);
 		const exitAfterError = new Promise((resolve) =>
 			this.childProcess.once("error", (error) => {
+				/* istanbul ignore else Difficult to test */
 				if (this.childProcess.exitCode != null) {
 					this.error = error;
 					resolve();
@@ -31,6 +28,7 @@ class WatchedChildProcess {
 		await this._killAndWait("SIGTERM", timeoutAfterSignal);
 		await this._killAndWait("SIGKILL", timeoutAfterSignal);
 
+		/* istanbul ignore else The else-branch is almost impossible to reach, too difficult to test. */
 		if (this.exited) {
 			return this.childProcess.exitCode;
 		} else {
