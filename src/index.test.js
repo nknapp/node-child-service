@@ -1,7 +1,9 @@
 const ChildService = require("./index");
 const cp = require("child_process");
 const { ChildProcess } = cp;
-const { measureMillis } = require("../test/helpers");
+const { measureMillis, delay } = require("../test/helpers");
+const processExists = require("process-exists");
+const testExecutables = require("../test/test-executables");
 
 describe("The child-service package", () => {
 	let service = null;
@@ -9,6 +11,7 @@ describe("The child-service package", () => {
 	afterEach(async () => {
 		if (service != null) {
 			await service.stop();
+			service = null;
 		}
 	});
 
@@ -148,5 +151,58 @@ describe("The child-service package", () => {
 		});
 	});
 
-	xit("if the parent dies, the child-process should be stopped", async () => {});
+	describe("the child-process should be stopped automatically", () => {
+		it("if the parent exits", async () => {
+			const { parentProcess, childPid } = await runParentWithChild(
+				testExecutables["parent.js"],
+				testExecutables["ready-at-once.js"]
+			);
+			parentProcess.send("exit");
+			await delay(500);
+
+			expect(await processExists(childPid)).toBe(false);
+			expect(await processExists(parentProcess.pid)).toBe(false);
+		});
+
+		describe("with a child process that is easy to stop", () => {
+			it(`if the parent is killed with SIGINT`, () =>
+				checkKillWithSignal("SIGINT", testExecutables["ready-at-once.js"]));
+			it(`if the parent is killed with SIGTERM`, () =>
+				checkKillWithSignal("SIGTERM", testExecutables["ready-at-once.js"]));
+			it(`if the parent is killed with SIGKILL`, () =>
+				checkKillWithSignal("SIGKILL", testExecutables["ready-at-once.js"]));
+		});
+
+		describe("if the child process refuses to stop", () => {
+			it(`if the parent is killed with SIGINT`, () =>
+				checkKillWithSignal("SIGINT", testExecutables["refuse-to-stop.js"]));
+			it(`if the parent is killed with SIGTERM`, () =>
+				checkKillWithSignal("SIGTERM", testExecutables["refuse-to-stop.js"]));
+			it(`if the parent is killed with SIGKILL`, () =>
+				checkKillWithSignal("SIGKILL", testExecutables["refuse-to-stop.js"]));
+		});
+	});
 });
+
+async function checkKillWithSignal(signal, testExecutable) {
+	const { parentProcess, childPid } = await runParentWithChild(
+		testExecutables["parent.js"],
+		testExecutable
+	);
+	parentProcess.kill(signal);
+	await delay(1000);
+
+	expect(await processExists(childPid)).toBe(false);
+	expect(await processExists(parentProcess.pid)).toBe(false);
+}
+
+async function runParentWithChild(parentExecutable, childExecutable) {
+	const parentProcess = cp.fork(parentExecutable, [childExecutable]);
+	const childPid = await new Promise((resolve) => {
+		parentProcess.on("message", resolve);
+	});
+	return {
+		parentProcess,
+		childPid,
+	};
+}

@@ -9,8 +9,13 @@ module.exports = {
 	"takes-500ms-to-kill.js": resolveChild("takes-500ms-to-kill.js"),
 	"stop-immediately.js": resolveChild("stop-immediately.js"),
 	"run-millis.js": resolveChild("run-millis.js"),
+	"parent.js": resolveParent("parent.js"),
 };
 
 function resolveChild(name) {
 	return path.relative(".", path.join(__dirname, "children", name));
+}
+
+function resolveParent(name) {
+	return path.relative(".", path.join(__dirname, "parents", name));
 }

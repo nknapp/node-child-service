@@ -33,22 +33,20 @@ describe("the WatchedChildProcess", () => {
 		});
 
 		it("changes to 'exited' when the process stops by itself", async () => {
-			const child = new WatchedChildProcess(
-				process.argv0,
-				[testExecutables["run-millis.js"], "50"],
-				{ stdio: "inherit" }
-			);
+			const child = new WatchedChildProcess(process.argv0, [
+				testExecutables["run-millis.js"],
+				"50",
+			]);
 
 			await delay(500);
 			expect(child.exited).toBe(true);
 		});
 
 		it("changes to 'exited' when the process is terminated", async () => {
-			const child = new WatchedChildProcess(
-				process.argv0,
-				[testExecutables["run-millis.js"], "50"],
-				{ stdio: "inherit" }
-			);
+			const child = new WatchedChildProcess(process.argv0, [
+				testExecutables["run-millis.js"],
+				"50",
+			]);
 
 			await delay(500);
 			child.childProcess.kill("SIGTERM");
@@ -56,11 +54,10 @@ describe("the WatchedChildProcess", () => {
 		});
 
 		it("changes to 'exited' status when the process is killed", async () => {
-			const child = new WatchedChildProcess(
-				process.argv0,
-				[testExecutables["run-millis.js"], "50"],
-				{ stdio: "inherit" }
-			);
+			const child = new WatchedChildProcess(process.argv0, [
+				testExecutables["run-millis.js"],
+				"50",
+			]);
 
 			await delay(500);
 			child.childProcess.kill("SIGKILL");
@@ -70,11 +67,10 @@ describe("the WatchedChildProcess", () => {
 
 	describe("stopping a started child-process", () => {
 		it("should return immediately if process is not running", async () => {
-			const child = new WatchedChildProcess(
-				process.argv0,
-				[testExecutables["run-millis.js"], "50"],
-				{ stdio: "inherit" }
-			);
+			const child = new WatchedChildProcess(process.argv0, [
+				testExecutables["run-millis.js"],
+				"50",
+			]);
 			await delay(500);
 			expect(child.exited).toBe(true);
 
@@ -85,11 +81,10 @@ describe("the WatchedChildProcess", () => {
 		});
 
 		it("should return once a process stops after SIGTERM", async () => {
-			const child = new WatchedChildProcess(
-				process.argv0,
-				[testExecutables["run-millis.js"], "10000"],
-				{ stdio: "inherit" }
-			);
+			const child = new WatchedChildProcess(process.argv0, [
+				testExecutables["run-millis.js"],
+				"10000",
+			]);
 			expect(child.exited).toBe(false);
 			await delay(100);
 
@@ -100,11 +95,9 @@ describe("the WatchedChildProcess", () => {
 		});
 
 		it("should attempt SIGKILL if a process refuses to stop", async () => {
-			const child = new WatchedChildProcess(
-				process.argv0,
-				[testExecutables["refuse-to-stop.js"]],
-				{ stdio: "inherit" }
-			);
+			const child = new WatchedChildProcess(process.argv0, [
+				testExecutables["refuse-to-stop.js"],
+			]);
 			expect(child.exited).toBe(false);
 			await delay(100);
 
