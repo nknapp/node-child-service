@@ -1,6 +1,6 @@
 {
   "name": "child-service",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Start services as child-process, wait until they are ready and stop them.",
   "main": "src/index.js",
   "types": "types/index.d.ts",

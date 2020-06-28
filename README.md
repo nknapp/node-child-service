@@ -17,7 +17,7 @@ Let's assume, we have a service that does not detach, but it is not ready immedi
 We can now do the following.
 
 ```js
-const ChildService = require("../");
+const { ChildService } = require("../");
 const got = require("got");
 
 // We call nodejs in this example, but in reality, it
@@ -82,6 +82,7 @@ Create a new child-service
 | userOptions.readyRegex | <code>RegExp</code> | process is assumed to be ready, when this regex matches the output. |
 | userOptions.outputLimit | <code>number</code> | only look for readyRegex in the first "outputLimit" number of bytes of the output. |
 | userOptions.spawnOptions | <code>object</code> | options to pass to child_process.spawn |
+| userOptions.timeoutAfterSignal | <code>number</code> | how long (in milliseconds) to wait after stopping the child with SIGTERM, before using SIGKILL and after that before giving up. |
 
 <a name="ChildService+start"></a>
 
