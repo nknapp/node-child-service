@@ -52,6 +52,8 @@ hello
 Stopped!
 ```
 
+The package also makes sure that processes are stopped when the parent-process dies unexpectedly. It takes into account quitting by `process.exit()` as well as `SIGTERM`, `SIGINT` and `SIGKILL`.
+
 # API reference
 
 <a name="ChildService"></a>

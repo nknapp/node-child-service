@@ -1,3 +1,5 @@
+## [2.0.1](https://github.com/nknapp/node-child-service/compare/v2.0.0...v2.0.1) (2020-06-28)
+
 # [2.0.0](https://github.com/nknapp/node-child-service/compare/v1.0.0...v2.0.0) (2020-06-28)
 
 ### Bug Fixes
