@@ -13,3 +13,6 @@ This will start the service, wait until the stdout matches pattern, then call an
 The output of this program is:
 
 {{{exec 'node example.js' cwd='examples/'}}}
+
+The package also makes sure that processes are stopped when the parent-process dies unexpectedly.
+It takes into account quitting by `process.exit()` as well as `SIGTERM`, `SIGINT` and `SIGKILL`.
