@@ -16,7 +16,7 @@
     "pretest": "npm run lint",
     "test": "npm run test:jest --",
     "posttest": "npm run format",
-    "format": "prettier --loglevel warn --write \"**/*.{js,css,md}\"",
+    "format": "prettier --loglevel warn --write \"**/*.{js,ts,d.ts,css,md}\"",
     "lint": "eslint . --cache --fix",
     "dtslint": "dtslint types --installAll",
     "thought": "thought run -a",
@@ -46,7 +46,7 @@
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "*.{js,ts,d.ts,css,md}": "prettier --write"
   },
   "jest": {
     "rootDir": ".",
@@ -61,5 +61,7 @@
         "statements": 100
       }
     }
-  }
+  },
+  "repository": "git@github.com:nknapp/node-child-service.git",
+  "author": "Nils Knappmeier <npm@knappi.org>"
 }
