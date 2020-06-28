@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Start services as child-process, wait until they are ready and stop them.",
   "main": "src/index.js",
+  "types": "types/index.d.ts",
   "license": "MIT",
   "private": false,
   "files": [
@@ -17,6 +18,7 @@
     "posttest": "npm run format",
     "format": "prettier --loglevel warn --write \"**/*.{js,css,md}\"",
     "lint": "eslint . --cache --fix",
+    "dtslint": "dtslint types --installAll",
     "thought": "thought run -a",
     "changelog": "standard-changelog && git add CHANGELOG.md",
     "version": "npm run changelog && npm run thought"
@@ -47,6 +49,10 @@
     "*.{js,css,md}": "prettier --write"
   },
   "jest": {
+    "rootDir": ".",
+    "testMatch": [
+      "**/src/**/*.test.js"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 100,
