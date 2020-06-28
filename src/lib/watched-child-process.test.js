@@ -99,7 +99,7 @@ describe("the WatchedChildProcess", () => {
 				testExecutables["refuse-to-stop.js"],
 			]);
 			expect(child.exited).toBe(false);
-			await delay(100);
+			await delay(500);
 
 			const { duration } = await measureMillis(() => child.stop(500));
 
