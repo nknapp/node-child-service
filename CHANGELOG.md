@@ -11,4 +11,8 @@
 
 - ensure that child-process is stopped when parent dies ([eef5cd1](https://github.com/nknapp/node-child-service/commit/eef5cd12ce5e406026af5e14286ab660b77087e5))
 
+### Breaking changes
+
+- make ChildService a named export ([bb4d4a9](http://github.com/nknapp/node-child-service/commit/bb4d4a977c1d65773f7892bfc7da341eec4c6209))
+
 # 1.0.0 (2020-06-07)
