@@ -1,4 +1,4 @@
-const ChildService = require("../");
+const { ChildService } = require("../");
 const got = require("got");
 
 // We call nodejs in this example, but in reality, it

@@ -1,5 +1,5 @@
 const { run } = require("../helpers");
-const ChildService = require("../../");
+const { ChildService } = require("../../");
 
 const childExecutable = process.argv.slice(2);
 

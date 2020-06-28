@@ -1,4 +1,4 @@
-const ChildService = require("./index");
+const { ChildService } = require("./index");
 const cp = require("child_process");
 const { ChildProcess } = cp;
 const { measureMillis, delay } = require("../test/helpers");

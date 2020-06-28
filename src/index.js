@@ -123,4 +123,4 @@ class ChildService {
 	}
 }
 
-module.exports = ChildService;
+module.exports = { ChildService };
