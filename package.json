@@ -33,7 +33,7 @@
     "prettier": "^2.0.5",
     "process-exists": "^4.0.0",
     "standard-changelog": "^2.0.24",
-    "thought": "^3.0.0",
+    "thought": "^3.0.1",
     "thought-plugin-jsdoc": "^2.0.0"
   },
   "dependencies": {

@@ -5351,10 +5351,10 @@ thought-plugin-jsdoc@^2.0.0:
   dependencies:
     jsdoc-to-markdown "^5.0.3"
 
-thought@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/thought/-/thought-3.0.0.tgz#59a4944fac6d7ed26cd3b8f16792dac1f71bd2b7"
-  integrity sha512-bLS6rEhRIgUGko7E7rZ2zsQIytLuDc7ds2PiSkKpu0yY4e8hID5xm1YsoQ4VLBycJZmzPz1T7hK3BmUZtNbk+g==
+thought@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/thought/-/thought-3.0.1.tgz#61dda3e174f37a4eec9076d1818e9d5826a2fcbf"
+  integrity sha512-naOdPcmSKtvDPcRuHUcV3dmfUyhjyBJadP7fK8eC5edpYMGSv+2uhF+IJ9dZPbQFYXvU44yr9KK86TdGTyMipw==
   dependencies:
     archy "^1.0.0"
     commander "^4.1.0"

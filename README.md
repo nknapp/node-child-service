@@ -17,7 +17,7 @@ Let's assume, we have a service that does not detach, but it is not ready immedi
 We can now do the following.
 
 ```js
-const { ChildService } = require("../");
+const { ChildService } = require("child-service");
 const got = require("got");
 
 // We call nodejs in this example, but in reality, it
