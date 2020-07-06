@@ -45,6 +45,21 @@ describe("The child-service package", () => {
 				expect(duration).toBeGreaterThan(200);
 				expect(duration).toBeLessThan(1000);
 			});
+
+			it("if the matching line is written to stderr and 'listenOnStderr' is set to true", async () => {
+				service = new ChildService({
+					command: process.argv0,
+					args: ["test/children/ready-after-500ms-on-stderr.js"],
+					readyRegex: /Now I am ready/,
+					listenOnStderr: true,
+				});
+
+				const { duration, result } = await measureMillis(() => service.start());
+
+				expect(result).toBeInstanceOf(ChildProcess);
+				expect(duration).toBeGreaterThan(200);
+				expect(duration).toBeLessThan(1000);
+			});
 		});
 
 		it('should pass spawnOptions to "child_process.spawn"', async () => {

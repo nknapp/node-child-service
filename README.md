@@ -85,6 +85,7 @@ Create a new child-service
 | userOptions.outputLimit | <code>number</code> | only look for readyRegex in the first "outputLimit" number of bytes of the output. |
 | userOptions.spawnOptions | <code>object</code> | options to pass to child_process.spawn |
 | userOptions.timeoutAfterSignal | <code>number</code> | how long (in milliseconds) to wait after stopping the child with SIGTERM, before using SIGKILL and after that before giving up. |
+| userOptions.listenOnStderr | <code>boolean</code> | (default: false) whether to wait for "readyRegex" on stderr of the child-process instead of stdout |
 
 <a name="ChildService+start"></a>
 

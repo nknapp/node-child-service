@@ -14,6 +14,7 @@ declare module "child-service" {
 		outputLimit?: number;
 		spawnOptions?: AllowedSpawnOptions;
 		timeoutAfterSignal?: number;
+		listenOnStderr?: boolean;
 	}
 
 	interface AllowedSpawnOptions {

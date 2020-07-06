@@ -19,6 +19,7 @@ class ChildService {
 	 * @param {object?} userOptions.spawnOptions options to pass to child_process.spawn
 	 * @param {number?} userOptions.timeoutAfterSignal how long (in milliseconds) to wait after stopping the child with SIGTERM, before using SIGKILL and
 	 *    after that before giving up.
+	 * @param {boolean?} userOptions.listenOnStderr (default: false) whether to wait for "readyRegex" on stderr of the child-process instead of stdout
 	 * @public
 	 * @returns {Promise<ChildProcessWithoutNullStreams>}
 	 */
@@ -44,6 +45,7 @@ class ChildService {
 		const options = {
 			outputLimit: 1024 * 1024,
 			readyRegex: null,
+			listenOnStderr: false,
 			...this.userOptions,
 		};
 
@@ -55,9 +57,13 @@ class ChildService {
 
 		this._ensureStopChildProcessAfterParentDies();
 
+		let searchedOutput = options.listenOnStderr
+			? this.watchedChildProcess.childProcess.stderr
+			: this.watchedChildProcess.childProcess.stdout;
+
 		await Promise.race([
 			waitForMatch({
-				readable: this.watchedChildProcess.childProcess.stdout,
+				readable: searchedOutput,
 				regex: options.readyRegex,
 				limit: options.outputLimit,
 			}),
