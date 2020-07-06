@@ -7,7 +7,8 @@
   "license": "MIT",
   "private": false,
   "files": [
-    "src/**/*.js"
+    "src/**/*.js",
+    "types"
   ],
   "scripts": {
     "test:jest": "jest",
