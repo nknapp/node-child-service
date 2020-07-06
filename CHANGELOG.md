@@ -1,3 +1,9 @@
+# [2.1.0](https://github.com/nknapp/node-child-service/compare/v2.0.2...v2.1.0) (2020-07-06)
+
+### Features
+
+- include typings ([641c20e](https://github.com/nknapp/node-child-service/commit/641c20e49dd29082568991de3a81239a35e3b224))
+
 ## [2.0.2](https://github.com/nknapp/node-child-service/compare/v2.0.1...v2.0.2) (2020-07-01)
 
 ## [2.0.1](https://github.com/nknapp/node-child-service/compare/v2.0.0...v2.0.1) (2020-06-28)
