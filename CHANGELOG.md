@@ -1,3 +1,9 @@
+# [2.2.0](https://github.com/nknapp/node-child-service/compare/v2.1.0...v2.2.0) (2020-07-06)
+
+### Features
+
+- add option "listenOnStderr" ([bf91ed8](https://github.com/nknapp/node-child-service/commit/bf91ed8789b400806167ce733500a931732187a3))
+
 # [2.1.0](https://github.com/nknapp/node-child-service/compare/v2.0.2...v2.1.0) (2020-07-06)
 
 ### Features
