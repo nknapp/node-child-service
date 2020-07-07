@@ -9,6 +9,9 @@ module.exports = {
 	"takes-500ms-to-kill.js": resolveChild("takes-500ms-to-kill.js"),
 	"stop-immediately.js": resolveChild("stop-immediately.js"),
 	"run-millis.js": resolveChild("run-millis.js"),
+	"writing-to-stdout-and-stderr.js": resolveChild(
+		"writing-to-stdout-and-stderr.js"
+	),
 	"parent.js": resolveParent("parent.js"),
 };
 

@@ -1,6 +1,8 @@
 const { WatchedChildProcess } = require("./watched-child-process");
 const testExecutables = require("../../test/test-executables");
 const { measureMillis, delay } = require("../../test/helpers");
+const { Sink } = require("../../test/sink");
+const debug = require("debug");
 
 describe("the WatchedChildProcess", () => {
 	describe("after starting a non-existing executable", () => {
@@ -30,6 +32,19 @@ describe("the WatchedChildProcess", () => {
 			]);
 			await delay(100);
 			expect(child.exited).toBe(false);
+		});
+
+		it("logs both child-process outputs to stderr", async () => {
+			const namespace = "child-service:watched-child-process";
+
+			const debugOutput = await captureDebugOutputWhile(namespace, async () => {
+				const executable = testExecutables["writing-to-stdout-and-stderr.js"];
+				const child = new WatchedChildProcess(process.argv0, [executable]);
+				await child.exitPromise;
+			});
+
+			expect(debugOutput).toMatch(/stdout: Logging to stdout/);
+			expect(debugOutput).toMatch(/stderr: Logging to stderr/);
 		});
 
 		it("changes to 'exited' when the process stops by itself", async () => {
@@ -109,3 +124,32 @@ describe("the WatchedChildProcess", () => {
 		});
 	});
 });
+
+async function captureDebugOutputWhile(namespace, callback) {
+	return captureStderrWhile(async () =>
+		activeDebugNamespaceWhile(namespace, callback)
+	);
+}
+
+async function captureStderrWhile(callback) {
+	const originalStdErrWrite = process.stderr.write;
+	const sink = new Sink();
+	try {
+		process.stderr.write = sink.write.bind(sink);
+		await callback();
+	} finally {
+		process.stderr.write = originalStdErrWrite;
+	}
+	return sink.collectString();
+}
+
+async function activeDebugNamespaceWhile(namespace, callback) {
+	const debugNamespaces = debug.disable();
+	try {
+		debug.enable(namespace);
+
+		await callback();
+	} finally {
+		debug.enable(debugNamespaces);
+	}
+}

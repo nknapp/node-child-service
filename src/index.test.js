@@ -62,7 +62,7 @@ describe("The child-service package", () => {
 			});
 		});
 
-		it('should pass spawnOptions to "child_process.spawn"', async () => {
+		it('passes spawnOptions to "child_process.spawn"', async () => {
 			const spyOnSpawn = jest.spyOn(cp, "spawn");
 			service = new ChildService({
 				command: process.argv0,

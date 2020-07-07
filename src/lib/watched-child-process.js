@@ -1,10 +1,19 @@
-const debug = require("debug")("child-service:stop-child-process");
+const debug = require("debug")("child-service:watched-child-process");
+const { PrefixStream } = require("./prefix-stream");
 const cp = require("child_process");
 
 class WatchedChildProcess {
 	constructor(command, args, options) {
 		debug(`spawning`, { command, args, options });
 		this.childProcess = cp.spawn(command, args, options);
+		if (debug.enabled) {
+			this.childProcess.stdout
+				.pipe(new PrefixStream("stdout: "))
+				.pipe(process.stderr);
+			this.childProcess.stderr
+				.pipe(new PrefixStream("stderr: "))
+				.pipe(process.stderr);
+		}
 
 		const exitEvent = new Promise((resolve) =>
 			this.childProcess.once("exit", resolve)
