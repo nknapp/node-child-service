@@ -1,3 +1,9 @@
+# [2.3.0](https://github.com/nknapp/node-child-service/compare/v2.2.0...v2.3.0) (2020-07-07)
+
+### Features
+
+- log child-process output to stderr when DEBUG="child-service:watched-child-process" ([44c9523](https://github.com/nknapp/node-child-service/commit/44c9523ac1494e981736e901e42f7d907fda945b))
+
 # [2.2.0](https://github.com/nknapp/node-child-service/compare/v2.1.0...v2.2.0) (2020-07-06)
 
 ### Features
