@@ -1,3 +1,9 @@
+# [2.4.0](https://github.com/nknapp/node-child-service/compare/v2.3.0...v2.4.0) (2020-07-30)
+
+### Features
+
+- allow Promises to be used for "cmd" and "args" ([1a94e79](https://github.com/nknapp/node-child-service/commit/1a94e790baf48ebb9370a32ea3613c14bc414f13))
+
 # [2.3.0](https://github.com/nknapp/node-child-service/compare/v2.2.0...v2.3.0) (2020-07-07)
 
 ### Features
