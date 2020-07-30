@@ -53,3 +53,10 @@ function withOutputLimit() {
 		outputLimit: 10000,
 	});
 }
+
+function withPromisesAsCommandAndArgs() {
+	new ChildService({
+		command: Promise.resolve("executable"),
+		args: Promise.resolve(["1", "2"]),
+	});
+}

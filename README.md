@@ -23,8 +23,8 @@ const got = require("got");
 // We call nodejs in this example, but in reality, it
 // is probably some binary executable.
 const childService = new ChildService({
-  command: process.execPath,
-  args: ["service.js"],
+  command: process.execPath, // you can also use a promise here
+  args: ["service.js"], // you can also use a promise here
   readyRegex: /Listening on port 3000/,
   spawnOptions: {
     cwd: __dirname
@@ -79,8 +79,8 @@ Create a new child-service
 | Param | Type | Description |
 | --- | --- | --- |
 | userOptions | <code>object</code> | parameters |
-| userOptions.command | <code>string</code> | the command to execute |
-| userOptions.args | <code>Array.&lt;string&gt;</code> | arguments to the command |
+| userOptions.command | <code>string</code> \| <code>Promise.&lt;string&gt;</code> | the command to execute |
+| userOptions.args | <code>Array.&lt;string&gt;</code> \| <code>Promise.&lt;Array.&lt;string&gt;&gt;&#x3D;</code> | arguments to the command |
 | userOptions.readyRegex | <code>RegExp</code> | process is assumed to be ready, when this regex matches the output. |
 | userOptions.outputLimit | <code>number</code> | only look for readyRegex in the first "outputLimit" number of bytes of the output. |
 | userOptions.spawnOptions | <code>object</code> | options to pass to child_process.spawn |

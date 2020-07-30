@@ -8,8 +8,8 @@ declare module "child-service" {
 	}
 
 	interface ChildServiceOptions {
-		command: string;
-		args?: string[];
+		command: string | Promise<string>;
+		args?: string[] | Promise<string[]>;
 		readyRegex?: RegExp;
 		outputLimit?: number;
 		spawnOptions?: AllowedSpawnOptions;

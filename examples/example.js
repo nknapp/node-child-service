@@ -4,8 +4,8 @@ const got = require("got");
 // We call nodejs in this example, but in reality, it
 // is probably some binary executable.
 const childService = new ChildService({
-	command: process.execPath,
-	args: ["service.js"],
+	command: process.execPath, // you can also use a promise here
+	args: ["service.js"], // you can also use a promise here
 	readyRegex: /Listening on port 3000/,
 	spawnOptions: {
 		cwd: __dirname,

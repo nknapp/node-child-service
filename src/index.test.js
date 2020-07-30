@@ -62,7 +62,21 @@ describe("The child-service package", () => {
 			});
 		});
 
-		it('passes spawnOptions to "child_process.spawn"', async () => {
+		it("accepts promises as command and args", async () => {
+			service = new ChildService({
+				command: delay(100).then(() => process.argv0),
+				args: delay(200).then(() => ["test/children/ready-after-500ms.js"]),
+				readyRegex: /Now I am ready/,
+			});
+
+			const { duration, result } = await measureMillis(() => service.start());
+
+			expect(result).toBeInstanceOf(ChildProcess);
+			expect(duration).toBeGreaterThan(400);
+			expect(duration).toBeLessThan(1200);
+		});
+
+		it('starting the service passes spawnOptions to "child_process.spawn"', async () => {
 			const spyOnSpawn = jest.spyOn(cp, "spawn");
 			service = new ChildService({
 				command: process.argv0,

@@ -12,8 +12,8 @@ class ChildService {
 	 * Create a new child-service
 	 *
 	 * @param {object} userOptions parameters
-	 * @param {string} userOptions.command the command to execute
-	 * @param {string[]?} userOptions.args arguments to the command
+	 * @param {string|Promise<string>} userOptions.command the command to execute
+	 * @param {string[]|Promise<string[]>=} userOptions.args arguments to the command
 	 * @param {RegExp?} userOptions.readyRegex process is assumed to be ready, when this regex matches the output.
 	 * @param {number?} userOptions.outputLimit only look for readyRegex in the first "outputLimit" number of bytes of the output.
 	 * @param {object?} userOptions.spawnOptions options to pass to child_process.spawn
@@ -50,8 +50,8 @@ class ChildService {
 		};
 
 		this.watchedChildProcess = new WatchedChildProcess(
-			options.command,
-			options.args,
+			await options.command,
+			await options.args,
 			options.spawnOptions
 		);
 
