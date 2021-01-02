@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "eslint": "^7.2.0",
-    "eslint-config-prettier": "^6.7.0",
+    "eslint-config-prettier": "^7.1.0",
     "got": "^11.3.0",
     "husky": ">=4",
     "jest": "^26.0.1",
@@ -34,7 +34,7 @@
     "prettier": "^2.0.5",
     "process-exists": "^4.0.0",
     "standard-changelog": "^2.0.24",
-    "thought": "^3.0.1",
+    "thought": "^4.0.0",
     "thought-plugin-jsdoc": "^2.0.0"
   },
   "dependencies": {
