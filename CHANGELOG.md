@@ -1,3 +1,9 @@
+## [2.4.1](https://github.com/nknapp/node-child-service/compare/v2.4.0...v2.4.1) (2021-01-02)
+
+### Bug Fixes
+
+- handle missing "readyRegex" with immediate readiness. ([f1d1a28](https://github.com/nknapp/node-child-service/commit/f1d1a280163ea1bc63d97183c8c0bac2558643cc)), closes [#3](https://github.com/nknapp/node-child-service/issues/3)
+
 # [2.4.0](https://github.com/nknapp/node-child-service/compare/v2.3.0...v2.4.0) (2020-07-30)
 
 ### Features
