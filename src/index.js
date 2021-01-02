@@ -83,7 +83,9 @@ class ChildService {
 	_ensureStopChildProcessAfterParentDies() {
 		let childProcess = this.watchedChildProcess.childProcess;
 		if (childProcess.pid == null) {
-			debug("Not tracking parent death, because child didn't correctly start.");
+			debug(
+				"Not tracking parent termination, because child didn't correctly start."
+			);
 			return;
 		}
 		process.on("SIGINT", this._onTerminatingSignal);
