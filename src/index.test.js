@@ -62,6 +62,19 @@ describe("The child-service package", () => {
 			});
 		});
 
+		it("returns immediately if the no readyRegex is provided", async () => {
+			service = new ChildService({
+				command: delay(100).then(() => process.argv0),
+				args: delay(200).then(() => ["test/children/ready-after-500ms.js"]),
+			});
+
+			const { duration, result } = await measureMillis(() => service.start());
+
+			expect(result).toBeInstanceOf(ChildProcess);
+			expect(duration).toBeGreaterThan(0);
+			expect(duration).toBeLessThan(400);
+		});
+
 		it("accepts promises as command and args", async () => {
 			service = new ChildService({
 				command: delay(100).then(() => process.argv0),

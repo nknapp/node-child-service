@@ -62,11 +62,7 @@ class ChildService {
 			: this.watchedChildProcess.childProcess.stdout;
 
 		await Promise.race([
-			waitForMatch({
-				readable: searchedOutput,
-				regex: this.options.readyRegex,
-				limit: this.options.outputLimit,
-			}),
+			this._waitUntilReady(searchedOutput),
 			this._waitForExit(),
 		]);
 		if (this.watchedChildProcess.error != null) {
@@ -78,6 +74,17 @@ class ChildService {
 			);
 		}
 		return this.watchedChildProcess.childProcess;
+	}
+
+	_waitUntilReady(searchedOutput) {
+		if (this.options.readyRegex == null) {
+			return Promise.resolve();
+		}
+		return waitForMatch({
+			readable: searchedOutput,
+			regex: this.options.readyRegex,
+			limit: this.options.outputLimit,
+		});
 	}
 
 	_ensureStopChildProcessAfterParentDies() {
