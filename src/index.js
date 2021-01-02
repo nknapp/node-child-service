@@ -17,14 +17,20 @@ class ChildService {
 	 * @param {RegExp} [userOptions.readyRegex] process is assumed to be ready, when this regex matches the output.
 	 * @param {number} [userOptions.outputLimit] only look for readyRegex in the first "outputLimit" number of bytes of the output.
 	 * @param {object} [userOptions.spawnOptions] options to pass to child_process.spawn
-	 * @param {number} [userOptions.timeoutAfterSignal] how long (in milliseconds) to wait after stopping the child with SIGTERM, before using SIGKILL and
+	 * @param {number} [userOptions.timeoutAfterSignal] (default: 1000) how long (in milliseconds) to wait after stopping the child with SIGTERM, before using SIGKILL and
 	 *    after that before giving up.
 	 * @param {boolean} [userOptions.listenOnStderr] (default: false) whether to wait for "readyRegex" on stderr of the child-process instead of stdout
 	 * @public
 	 * @returns {Promise<ChildProcessWithoutNullStreams>}
 	 */
 	constructor(userOptions) {
-		this.userOptions = userOptions;
+		this.options = {
+			outputLimit: 1024 * 1024,
+			readyRegex: null,
+			listenOnStderr: false,
+			timeoutAfterSignal: 1000,
+			...userOptions,
+		};
 		this.watchedChildProcess = null;
 		this.supervisor = null;
 
@@ -42,30 +48,24 @@ class ChildService {
 		if (this.watchedChildProcess != null && !this.watchedChildProcess.exited) {
 			throw new Error("Child process is already running. Please stop first!");
 		}
-		const options = {
-			outputLimit: 1024 * 1024,
-			readyRegex: null,
-			listenOnStderr: false,
-			...this.userOptions,
-		};
 
 		this.watchedChildProcess = new WatchedChildProcess(
-			await options.command,
-			await options.args,
-			options.spawnOptions
+			await this.options.command,
+			await this.options.args,
+			this.options.spawnOptions
 		);
 
 		this._ensureStopChildProcessAfterParentDies();
 
-		let searchedOutput = options.listenOnStderr
+		let searchedOutput = this.options.listenOnStderr
 			? this.watchedChildProcess.childProcess.stderr
 			: this.watchedChildProcess.childProcess.stdout;
 
 		await Promise.race([
 			waitForMatch({
 				readable: searchedOutput,
-				regex: options.readyRegex,
-				limit: options.outputLimit,
+				regex: this.options.readyRegex,
+				limit: this.options.outputLimit,
 			}),
 			this._waitForExit(),
 		]);
@@ -115,9 +115,7 @@ class ChildService {
 		if (this.watchedChildProcess == null) {
 			return;
 		}
-		await this.watchedChildProcess.stop(
-			this.userOptions.timeoutAfterSignal || 1000
-		);
+		await this.watchedChildProcess.stop(this.options.timeoutAfterSignal);
 		process.off("SIGTERM", this._onTerminatingSignal);
 		process.off("SIGINT", this._onTerminatingSignal);
 		this.watchedChildProcess = null;
