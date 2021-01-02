@@ -80,12 +80,12 @@ Create a new child-service
 | --- | --- | --- |
 | userOptions | <code>object</code> | parameters |
 | userOptions.command | <code>string</code> \| <code>Promise.&lt;string&gt;</code> | the command to execute |
-| userOptions.args | <code>Array.&lt;string&gt;</code> \| <code>Promise.&lt;Array.&lt;string&gt;&gt;&#x3D;</code> | arguments to the command |
-| userOptions.readyRegex | <code>RegExp</code> | process is assumed to be ready, when this regex matches the output. |
-| userOptions.outputLimit | <code>number</code> | only look for readyRegex in the first "outputLimit" number of bytes of the output. |
-| userOptions.spawnOptions | <code>object</code> | options to pass to child_process.spawn |
-| userOptions.timeoutAfterSignal | <code>number</code> | how long (in milliseconds) to wait after stopping the child with SIGTERM, before using SIGKILL and after that before giving up. |
-| userOptions.listenOnStderr | <code>boolean</code> | (default: false) whether to wait for "readyRegex" on stderr of the child-process instead of stdout |
+| [userOptions.args] | <code>Array.&lt;string&gt;</code> \| <code>Promise.&lt;Array.&lt;string&gt;&gt;</code> | arguments to the command |
+| [userOptions.readyRegex] | <code>RegExp</code> | process is assumed to be ready, when this regex matches the output. |
+| [userOptions.outputLimit] | <code>number</code> | only look for readyRegex in the first "outputLimit" number of bytes of the output. |
+| [userOptions.spawnOptions] | <code>object</code> | options to pass to child_process.spawn |
+| [userOptions.timeoutAfterSignal] | <code>number</code> | how long (in milliseconds) to wait after stopping the child with SIGTERM, before using SIGKILL and after that before giving up. |
+| [userOptions.listenOnStderr] | <code>boolean</code> | (default: false) whether to wait for "readyRegex" on stderr of the child-process instead of stdout |
 
 <a name="ChildService+start"></a>
 

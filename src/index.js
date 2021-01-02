@@ -13,13 +13,13 @@ class ChildService {
 	 *
 	 * @param {object} userOptions parameters
 	 * @param {string|Promise<string>} userOptions.command the command to execute
-	 * @param {string[]|Promise<string[]>=} userOptions.args arguments to the command
-	 * @param {RegExp?} userOptions.readyRegex process is assumed to be ready, when this regex matches the output.
-	 * @param {number?} userOptions.outputLimit only look for readyRegex in the first "outputLimit" number of bytes of the output.
-	 * @param {object?} userOptions.spawnOptions options to pass to child_process.spawn
-	 * @param {number?} userOptions.timeoutAfterSignal how long (in milliseconds) to wait after stopping the child with SIGTERM, before using SIGKILL and
+	 * @param {string[]|Promise<string[]>}  [userOptions.args] arguments to the command
+	 * @param {RegExp} [userOptions.readyRegex] process is assumed to be ready, when this regex matches the output.
+	 * @param {number} [userOptions.outputLimit] only look for readyRegex in the first "outputLimit" number of bytes of the output.
+	 * @param {object} [userOptions.spawnOptions] options to pass to child_process.spawn
+	 * @param {number} [userOptions.timeoutAfterSignal] how long (in milliseconds) to wait after stopping the child with SIGTERM, before using SIGKILL and
 	 *    after that before giving up.
-	 * @param {boolean?} userOptions.listenOnStderr (default: false) whether to wait for "readyRegex" on stderr of the child-process instead of stdout
+	 * @param {boolean} [userOptions.listenOnStderr] (default: false) whether to wait for "readyRegex" on stderr of the child-process instead of stdout
 	 * @public
 	 * @returns {Promise<ChildProcessWithoutNullStreams>}
 	 */
